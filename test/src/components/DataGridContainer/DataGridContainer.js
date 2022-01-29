@@ -1,36 +1,52 @@
-import React, {useMemo} from 'react';
-import {Paper, TableRow, TableHead, TableContainer, TableCell, TableBody, Table} from '@mui/material';
-import { useApplicationContext } from '../../context/ApplicationContext';
+import React, { useMemo } from "react";
+import {
+  Paper,
+  TableRow,
+  TableHead,
+  TableContainer,
+  TableCell,
+  TableBody,
+  Table,
+} from "@mui/material";
+import { useApplicationContext } from "../../context/ApplicationContext";
 
+const DataGridContainer = () => {
+  const { scannedItems, terminatedItems } = useApplicationContext();
 
-const  DataGridContainer = () =>  {
-    const { scannedItems, terminatedItems } = useApplicationContext()
+  const createData = (srNo, action, devices, timeStamp) => {
+    return { srNo, action, devices, timeStamp };
+  };
 
-    const createData = ( srNo, action, devices, timeStamp) => {
-        return { srNo, action, devices, timeStamp};
+  const rows = useMemo(() => {
+    let listScanDeviceNames = [];
+    let listTerminateDeviceNames = [];
+    if (scannedItems.list.length > 0) {
+      listScanDeviceNames = scannedItems.list.map((item) => {
+        return item.deviceName;
+      });
     }
-    
-    const rows = useMemo(() => {
-        let listScanDeviceNames = []
-        let listTerminateDeviceNames = []
-        if(scannedItems.list.length > 0) {
-            listScanDeviceNames =  scannedItems.list.map((item) => {
-                return item.deviceName
-            });
-        }
 
-        if(terminatedItems.list.length > 0) {
-            listTerminateDeviceNames =  terminatedItems.list.map((item) => {
-                return item.deviceName
-            });
-        }
-        let rowData = [
-            createData('1', 'Scan', listScanDeviceNames.toString(), scannedItems.timeStamp),
-            createData('2', 'Terminate', listTerminateDeviceNames.toString(), terminatedItems.timeStamp)
-        ]
-        return rowData;
-    }, [scannedItems, terminatedItems])
-
+    if (terminatedItems.list.length > 0) {
+      listTerminateDeviceNames = terminatedItems.list.map((item) => {
+        return item.deviceName;
+      });
+    }
+    let rowData = [
+      createData(
+        "1",
+        "Scan",
+        listScanDeviceNames.toString(),
+        scannedItems.timeStamp
+      ),
+      createData(
+        "2",
+        "Terminate",
+        listTerminateDeviceNames.toString(),
+        terminatedItems.timeStamp
+      ),
+    ];
+    return rowData;
+  }, [scannedItems, terminatedItems]);
 
   return (
     <TableContainer component={Paper}>
@@ -47,19 +63,19 @@ const  DataGridContainer = () =>  {
           {rows.map((row) => (
             <TableRow
               key={row.action}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
-              <TableCell data-testid='srNumber' component="th" scope="row">
+              <TableCell data-testid="srNumber" component="th" scope="row">
                 {row.srNo}
               </TableCell>
-              <TableCell  data-testid='action'>{row.action}</TableCell>
-              <TableCell data-testid='deviceName'>{row.devices}</TableCell>
-              <TableCell data-testid='timeStamp'>{row.timeStamp}</TableCell>
+              <TableCell data-testid="action">{row.action}</TableCell>
+              <TableCell data-testid="deviceName">{row.devices}</TableCell>
+              <TableCell data-testid="timeStamp">{row.timeStamp}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </TableContainer>
   );
-}
+};
 export default DataGridContainer;
