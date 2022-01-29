@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useCallback } from "react";
 import {
   Paper,
   TableRow,
@@ -13,9 +13,9 @@ import { useApplicationContext } from "../../context/ApplicationContext";
 const DataGridContainer = () => {
   const { scannedItems, terminatedItems } = useApplicationContext();
 
-  const createData = (srNo, action, devices, timeStamp) => {
+  const createData = useCallback((srNo, action, devices, timeStamp) => {
     return { srNo, action, devices, timeStamp };
-  };
+  }, []);
 
   const rows = useMemo(() => {
     let listScanDeviceNames = [];
@@ -46,7 +46,7 @@ const DataGridContainer = () => {
       ),
     ];
     return rowData;
-  }, [scannedItems, terminatedItems]);
+  }, [scannedItems, terminatedItems, createData]);
 
   return (
     <TableContainer component={Paper}>
